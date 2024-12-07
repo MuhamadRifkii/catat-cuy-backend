@@ -9,10 +9,9 @@ const port = process.env.PORT || 3001;
 const routers = require("./routes");
 const auth = require("./middleware/auth");
 
-const config = require("./config/config.json");
 const mongoose = require("mongoose");
 
-mongoose.connect(config.connectionString);
+mongoose.connect(process.env.mongodb);
 
 //temp
 const User = require("../models/user.model");
@@ -252,9 +251,7 @@ app.put("/pin-note/:noteId", auth, async (req, res) => {
       return res.status(404).json({ error: true, message: "Note not found" });
     }
 
-    if (isPinned) {
-      note.isPinned = isPinned || false;
-    }
+    note.isPinned = isPinned;
 
     await note.save();
 
