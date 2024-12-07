@@ -1,4 +1,7 @@
 {
+
+  "connectionString": "mongodb+srv://testuser:testuser123@notesapp.ocrnx.mongodb.net/?retryWrites=true&w=majority&appName=notesapp",
+
   "development": {
     "username": "mrifk",
     "password": null,

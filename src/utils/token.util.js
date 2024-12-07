@@ -6,7 +6,7 @@ dotenv.config();
 const encode = async (user) => {
   const token = jwt.sign(
     {
-      user_id: user.id,
+      user_id: user._id,
       email: user.email,
     },
     process.env.TOKEN_SHHHH,

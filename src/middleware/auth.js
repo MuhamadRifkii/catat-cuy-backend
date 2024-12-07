@@ -16,6 +16,7 @@ const auth = (req, res, next) => {
         .status(401)
         .json({ message: "Authentication failed: Invalid Token" });
     }
+    req.user = decode;
 
     next();
   });

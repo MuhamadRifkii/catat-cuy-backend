@@ -31,7 +31,12 @@ const login = async (req, res) => {
   }
 
   const token = await tokenUtils.encode(user);
-  return res.json({ token: token });
+  return res.json({
+    error: false,
+    message: "Login Successful",
+    email: req.body.email,
+    token: token,
+  });
 };
 
 module.exports = { signup, login };
