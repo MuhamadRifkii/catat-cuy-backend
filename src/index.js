@@ -14,9 +14,7 @@ const mongoose = require("mongoose");
 mongoose.connect(process.env.mongodb);
 
 //temp
-const User = require("../models/user.model");
 const Note = require("../models/note.model");
-const tokenUtils = require("./utils/token.util");
 
 app.use(express.json());
 app.use(morgan("combined"));
@@ -32,80 +30,6 @@ app.get("/", (req, res) => {
     message: "Hallo 👋",
     status: "Server ready 🚀",
   });
-});
-
-app.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
-
-  if (!name) {
-    return res.status(400).json({ error: true, message: "Name is required" });
-  }
-
-  if (!email) {
-    return res.status(400).json({ error: true, message: "Email is required" });
-  }
-
-  if (!password) {
-    return res
-      .status(400)
-      .json({ error: true, message: "Password is required" });
-  }
-
-  const isUser = await User.findOne({ email: email });
-
-  if (isUser) {
-    return res
-      .status(400)
-      .json({ error: true, message: "Email already exists" });
-  }
-
-  const user = new User({ name, email, password });
-
-  await user.save();
-
-  const token = await tokenUtils.encode(user);
-
-  return res.status(200).json({
-    error: false,
-    user,
-    token,
-    message: "User registered successfully",
-  });
-});
-
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email) {
-    return res.status(400).json({ error: true, message: "Email is required" });
-  }
-
-  if (!password) {
-    return res
-      .status(400)
-      .json({ error: true, message: "Password is required" });
-  }
-
-  const userInfo = await User.findOne({ email: email });
-
-  if (!userInfo) {
-    return res.status(400).json({ error: true, message: "User not found" });
-  }
-
-  if (userInfo.email === email) {
-    const token = await tokenUtils.encode(userInfo);
-
-    return res.json({
-      error: false,
-      email,
-      token,
-      message: "User logged in successfully",
-    });
-  } else {
-    return res
-      .status(400)
-      .json({ error: true, message: "Invalid username or password" });
-  }
 });
 
 app.post("/add-note", auth, async (req, res) => {
