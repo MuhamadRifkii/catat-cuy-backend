@@ -2,7 +2,7 @@
 // const db = require("../../models");
 // const User = db.users;
 
-const User = require("../../../models/user.model");
+const User = require("../../models/user.model");
 const passwordUtil = require("../../utils/password.util");
 const tokenUtils = require("../../utils/token.util");
 
