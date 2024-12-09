@@ -1,20 +1,22 @@
 "use strict";
 
+const passwordUtil = require("../utils/password.util");
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert("users", [
       {
-        nama: "John Doe",
+        name: "John Doe",
         email: "johndoe@example.com",
-        password: "789123",
+        password: await passwordUtil.encrypt("789123"),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        nama: "Jane Doe",
+        name: "Jane Doe",
         email: "janedoe@example.com",
-        password: "789123",
+        password: await passwordUtil.encrypt("789123"),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
