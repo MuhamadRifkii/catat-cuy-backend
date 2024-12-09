@@ -91,7 +91,12 @@ const getUserInfo = async (req, res) => {
 
   return res.json({
     error: false,
-    user: isUser,
+    user: {
+      name: isUser.name,
+      email: isUser.email,
+      _id: isUser._id,
+      createdOn: isUser.createdOn,
+    },
     message: "User information retrieved successfully",
   });
 };
