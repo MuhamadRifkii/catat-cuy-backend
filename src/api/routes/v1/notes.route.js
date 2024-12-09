@@ -1,7 +1,7 @@
 const router = require("express").Router();
 
-const auth = require("../../middleware/auth");
-const NotesController = require("../controller/notes.controller");
+const auth = require("../../../middleware/auth");
+const NotesController = require("../../controller/v1/notes.controller");
 
 router.get("/get-all-notes", auth, NotesController.getNotes);
 router.post("/add-note", auth, NotesController.addNote);

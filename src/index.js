@@ -9,7 +9,6 @@ const port = process.env.PORT || 3001;
 const routers = require("./routes");
 
 const mongoose = require("mongoose");
-
 mongoose.connect(process.env.mongodb);
 
 app.use(express.json());

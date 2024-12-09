@@ -1,7 +1,5 @@
-const db = require("../../models");
+const db = require("../../../models");
 const Note = db.notes;
-
-// const Note = require("../../models/note.model");
 
 const getNotes = async (req, res) => {
   const { id: userId } = req.user;
