@@ -1,8 +1,8 @@
 // Local DB //
-// const db = require("../../models");
-// const User = db.users;
+const db = require("../../models");
+const User = db.users;
 
-const User = require("../../models/user.model");
+// const User = require("../../models/user.model");
 const passwordUtil = require("../../utils/password.util");
 const tokenUtils = require("../../utils/token.util");
 
@@ -22,7 +22,7 @@ const register = async (req, res) => {
       .json({ error: true, message: "Password is required" });
   }
 
-  const isUser = await User.findOne({ email: email });
+  const isUser = await User.findOne({ where: { email: email } });
 
   if (isUser) {
     return res
@@ -61,7 +61,7 @@ const login = async (req, res) => {
       .json({ error: true, message: "Password is required" });
   }
 
-  const user = await User.findOne({ email: email });
+  const user = await User.findOne({ where: { email: email } });
   if (!user) {
     return res.status(401).json({ message: "User not found" });
   }
@@ -81,9 +81,9 @@ const login = async (req, res) => {
 };
 
 const getUserInfo = async (req, res) => {
-  const { user_id } = req.user;
+  const { id } = req.user;
 
-  const isUser = await User.findOne({ _id: user_id });
+  const isUser = await User.findOne({ where: { id } });
 
   if (!isUser) {
     return res.status(401).json({ message: "User not found" });
@@ -94,8 +94,8 @@ const getUserInfo = async (req, res) => {
     user: {
       name: isUser.name,
       email: isUser.email,
-      _id: isUser._id,
-      createdOn: isUser.createdOn,
+      id: isUser.id,
+      createdAt: isUser.createdAt,
     },
     message: "User information retrieved successfully",
   });
