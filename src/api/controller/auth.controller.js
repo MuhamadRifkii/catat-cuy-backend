@@ -80,4 +80,20 @@ const login = async (req, res) => {
   });
 };
 
-module.exports = { register, login };
+const getUserInfo = async (req, res) => {
+  const { user_id } = req.user;
+
+  const isUser = await User.findOne({ _id: user_id });
+
+  if (!isUser) {
+    return res.status(401).json({ message: "User not found" });
+  }
+
+  return res.json({
+    error: false,
+    user: isUser,
+    message: "User information retrieved successfully",
+  });
+};
+
+module.exports = { register, login, getUserInfo };
