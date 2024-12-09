@@ -4,9 +4,9 @@ const auth = require("../../middleware/auth");
 const NotesController = require("../controller/notes.controller");
 
 router.get("/get-all-notes", auth, NotesController.getNotes);
-router.post("/add-note", NotesController.addNote);
-router.post("/edit-note/:noteId", NotesController.editNote);
-router.put("/pin-note/:noteId", NotesController.pinNote);
-router.delete("/delete/:noteId", NotesController.deleteNote);
+router.post("/add-note", auth, NotesController.addNote);
+router.post("/edit-note/:noteId", auth, NotesController.editNote);
+router.put("/pin-note/:noteId", auth, NotesController.pinNote);
+router.delete("/delete/:noteId", auth, NotesController.deleteNote);
 
 module.exports = router;
