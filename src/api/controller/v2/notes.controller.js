@@ -7,7 +7,10 @@ const getNotes = async (req, res) => {
   try {
     const notes = await Note.findAll({
       where: { userId },
-      order: [["isPinned", "DESC"]],
+      order: [
+        ["isPinned", "DESC"],
+        ["createdAt", "DESC"],
+      ],
     });
 
     return res.json({
