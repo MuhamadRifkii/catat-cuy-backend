@@ -1,0 +1,37 @@
+name: Deploy BE to Vercel 
+
+env:
+  NEON_CSTRING: ${{ secrets.NEON_CSTRING }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }} # Pulls Vercel token from GitHub secrets
+
+on:
+  push:
+    branches:
+      - main # Triggers deployment when code is pushed to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout commit
+        uses: actions/checkout@v2
+
+      - name: Install vercel to project
+        run: npm install --global vercel@latest
+
+      - name: Install dependencies to project
+        run: npm install --frozen-lockfile
+
+      # - name: sequelize migration
+      #   run: npx sequelize-cli db:migrate
+      # - name: sequelize seeding
+      #   run: npx sequelize-cli db:seed:all
+
+      - name: Pull vercel information to github
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Repository
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Already Build Project to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
