@@ -3,7 +3,7 @@ const User = db.users;
 
 const passwordUtil = require("../../../utils/password.util");
 const tokenUtils = require("../../../utils/token.util");
-const otpUtil = require("../../utils/otp.util");
+const otpUtil = require("../../../utils/otp.util");
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
