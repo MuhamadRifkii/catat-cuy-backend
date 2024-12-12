@@ -3,6 +3,7 @@ const User = db.users;
 
 const passwordUtil = require("../../../utils/password.util");
 const tokenUtils = require("../../../utils/token.util");
+const otpUtil = require("../../utils/otp.util");
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -78,6 +79,73 @@ const login = async (req, res) => {
   });
 };
 
+const requestPasswordReset = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: true, message: "Email is required" });
+  }
+
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    return res.status(404).json({ error: true, message: "User not found" });
+  }
+
+  const OTP = otpUtil.generateOTP();
+  const otpExpire = new Date();
+  otpExpire.setMinutes(otpExpire.getMinutes() + 10); // 10 Minutes
+
+  user.otp = OTP;
+  user.otpExpire = otpExpire;
+  await user.save();
+
+  try {
+    await otpUtil.sendOTPViaEmail(email, OTP);
+    return res.status(200).json({
+      error: false,
+      message: "Password reset OTP sent successfully.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: "Failed to send OTP for password reset.",
+    });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  if (!email || !otp || !newPassword) {
+    return res.status(400).json({
+      error: true,
+      message: "Email, OTP, and new password are required.",
+    });
+  }
+
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    return res.status(404).json({ error: true, message: "User not found" });
+  }
+
+  if (user.otp !== otp || new Date() > user.otpExpire) {
+    return res.status(400).json({
+      error: true,
+      message: "Invalid or expired OTP.",
+    });
+  }
+
+  user.password = await passwordUtil.encrypt(req.body.newPassword);
+  user.otp = null;
+  user.otpExpire = null;
+  await user.save();
+
+  return res.status(200).json({
+    error: false,
+    message: "Password has been reset successfully.",
+  });
+};
+
 const getUserInfo = async (req, res) => {
   const { id } = req.user;
 
@@ -99,4 +167,10 @@ const getUserInfo = async (req, res) => {
   });
 };
 
-module.exports = { register, login, getUserInfo };
+module.exports = {
+  register,
+  login,
+  requestPasswordReset,
+  resetPassword,
+  getUserInfo,
+};
