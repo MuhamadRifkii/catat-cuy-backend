@@ -86,22 +86,24 @@ catat-cuy-backend/
 
 ## 🔗 Endpoints API
 
-| Method | Endpoint                   | Deskripsi                  |
-| ------ | -------------------------- | -------------------------- |
-|        | /api/v2/auth/*             |                            |
-| POST   | */register                 | Mendaftar Akun             |
-| POST   | */login                    | Masuk Akun                 |
-| GET    | */get-user                 | Mengambil informasi akun   |
-| POST   | */request-password-reset   | Request Reset Password     |
-| POST   | */reset-password           | Reset Password             |
-|        |                            |                            |
-|        | /api/v2/notes/*            |                            |
-| GET    | */get-all-notes            | Mengambil semua catatan    |
-| POST   | */add-note                 | Menambahkan catatan        |
-| PUT    | */edit-note/:id            | Mengedit catatan           |
-| PUT    | */edit-note/:id            | Mengedit catatan           |
-| PUT    | */pin-note/:id             | Memberi pin pada catatan   |
-| DELETE | */delete/:id               | Menghapus catatan          |
+Selengkapnya ada di [Dokumentasi API](https://documenter.getpostman.com/view/33598404/2sAYHzHPDJ) 🔗
+
+| Method | Endpoint                  | Deskripsi                |
+| ------ | ------------------------- | ------------------------ |
+|        | /api/v2/auth/\*           |                          |
+| POST   | \*/register               | Mendaftar Akun           |
+| POST   | \*/login                  | Masuk Akun               |
+| GET    | \*/get-user               | Mengambil informasi akun |
+| POST   | \*/request-password-reset | Request Reset Password   |
+| POST   | \*/reset-password         | Reset Password           |
+|        |                           |                          |
+|        | /api/v2/notes/\*          |                          |
+| GET    | \*/get-all-notes          | Mengambil semua catatan  |
+| POST   | \*/add-note               | Menambahkan catatan      |
+| PUT    | \*/edit-note/:id          | Mengedit catatan         |
+| PUT    | \*/edit-note/:id          | Mengedit catatan         |
+| PUT    | \*/pin-note/:id           | Memberi pin pada catatan |
+| DELETE | \*/delete/:id             | Menghapus catatan        |
 
 ## 🤝 Kontribusi
 
