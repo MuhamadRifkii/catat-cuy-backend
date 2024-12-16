@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   notes.init(
     {
       title: DataTypes.STRING,
-      content: DataTypes.STRING,
+      content: DataTypes.TEXT,
       isPinned: DataTypes.BOOLEAN,
       userId: {
         type: DataTypes.INTEGER,
