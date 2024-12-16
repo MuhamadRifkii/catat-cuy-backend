@@ -11,7 +11,7 @@ const encode = async (user) => {
     },
     process.env.TOKEN_SHHHH,
     {
-      expiresIn: "1h",
+      expiresIn: "1d",
     }
   );
   return token;
