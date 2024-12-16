@@ -1,4 +1,4 @@
-const db = require("../../../models");
+const db = require("../../models");
 const Note = db.notes;
 
 const getNotes = async (req, res) => {
