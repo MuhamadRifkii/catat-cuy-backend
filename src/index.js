@@ -23,3 +23,5 @@ app.get("/", (req, res) => {
     status: "Server ready 🚀",
   });
 });
+
+app.listen(port, () => {});
