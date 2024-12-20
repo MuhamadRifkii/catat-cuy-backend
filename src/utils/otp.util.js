@@ -18,8 +18,8 @@ const sendOTPViaEmail = async (email, otp) => {
   const mailOptions = {
     from: process.env.GMAIL_USER,
     to: email,
-    subject: "Your OTP Code",
-    text: `Your OTP code is ${otp}. It is valid for 10 minutes.`,
+    subject: "Catat Cuy OTP",
+    text: `Halo Cuy!, Kode OTP untuk Reset Password kamu adalah ${otp}. OTP ini hanya berlaku 1 menit ya cuy!.`,
   };
 
   try {

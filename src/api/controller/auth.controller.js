@@ -4,6 +4,7 @@ const User = db.users;
 const passwordUtil = require("../../utils/password.util");
 const tokenUtils = require("../../utils/token.util");
 const otpUtil = require("../../utils/otp.util");
+const googleClient = require("../../config/googleAuth");
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -79,6 +80,44 @@ const login = async (req, res) => {
   });
 };
 
+const googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const { email, name } = ticket.getPayload();
+
+    let user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        password: await passwordUtil.encrypt(
+          Math.random().toString(36).slice(-8)
+        ),
+      });
+    }
+
+    const tokenEncode = await tokenUtils.encode(user);
+
+    return res.json({
+      error: false,
+      message: "Login Successful",
+      email: email,
+      token: tokenEncode,
+    });
+  } catch (error) {
+    console.error("Google login error:", error);
+    res.status(500).json({
+      message: "Terjadi kesalahan saat login dengan Google",
+    });
+  }
+};
+
 const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
 
@@ -93,7 +132,7 @@ const requestPasswordReset = async (req, res) => {
 
   const OTP = otpUtil.generateOTP();
   const otpExpire = new Date();
-  otpExpire.setMinutes(otpExpire.getMinutes() + 10); // 10 Minutes
+  otpExpire.setMinutes(otpExpire.getMinutes() + 1);
 
   user.otp = OTP;
   user.otpExpire = otpExpire;
@@ -170,6 +209,7 @@ const getUserInfo = async (req, res) => {
 module.exports = {
   register,
   login,
+  googleLogin,
   requestPasswordReset,
   resetPassword,
   getUserInfo,
