@@ -23,7 +23,3 @@ app.get("/", (req, res) => {
     status: "Server ready 🚀",
   });
 });
-
-app.listen(port, () => {
-  console.log(`Server ready listening on http://localhost:${port}`);
-});
