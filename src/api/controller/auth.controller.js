@@ -16,6 +16,14 @@ const register = async (req, res) => {
     return res.status(400).json({ error: true, message: "Email is required" });
   }
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({
+      error: true,
+      message: "Invalid email format",
+    });
+  }
+
   if (!password) {
     return res
       .status(400)
@@ -206,6 +214,66 @@ const getUserInfo = async (req, res) => {
   });
 };
 
+const updateUserInfo = async (req, res) => {
+  const { id } = req.user;
+  const { name, email } = req.body;
+
+  try {
+    // Validate input
+    if (!name || !email) {
+      return res.status(400).json({
+        error: true,
+        message: "Name and email are required",
+      });
+    }
+
+    // Check if email is valid
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        error: true,
+        message: "Invalid email format",
+      });
+    }
+
+    // Check if email is already taken by another user
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser && existingUser.id !== id) {
+      return res.status(409).json({
+        error: true,
+        message: "Email already in use by another account",
+      });
+    }
+
+    // Update user information
+    const [updatedRows] = await User.update({ name, email }, { where: { id } });
+
+    if (updatedRows === 0) {
+      return res.status(404).json({
+        error: true,
+        message: "User not found",
+      });
+    }
+
+    // Get updated user data
+    const updatedUser = await User.findByPk(id, {
+      attributes: { exclude: ["password"] },
+    });
+
+    return res.json({
+      error: false,
+      user: updatedUser,
+      message: "User information updated successfully",
+    });
+  } catch (error) {
+    console.error("Update error:", error);
+    return res.status(500).json({
+      error: true,
+      message: "Server error while updating user information",
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -213,4 +281,5 @@ module.exports = {
   requestPasswordReset,
   resetPassword,
   getUserInfo,
+  updateUserInfo,
 };
