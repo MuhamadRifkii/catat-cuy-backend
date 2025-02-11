@@ -140,7 +140,7 @@ const requestPasswordReset = async (req, res) => {
 
   const OTP = otpUtil.generateOTP();
   const otpExpire = new Date();
-  otpExpire.setMinutes(otpExpire.getMinutes() + 1);
+  otpExpire.setMinutes(otpExpire.getMinutes() + 5);
 
   user.otp = OTP;
   user.otpExpire = otpExpire;
@@ -219,7 +219,6 @@ const updateUserInfo = async (req, res) => {
   const { name, email } = req.body;
 
   try {
-    // Validate input
     if (!name || !email) {
       return res.status(400).json({
         error: true,
@@ -227,7 +226,6 @@ const updateUserInfo = async (req, res) => {
       });
     }
 
-    // Check if email is valid
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({
@@ -236,7 +234,6 @@ const updateUserInfo = async (req, res) => {
       });
     }
 
-    // Check if email is already taken by another user
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser && existingUser.id !== id) {
       return res.status(409).json({
@@ -245,7 +242,6 @@ const updateUserInfo = async (req, res) => {
       });
     }
 
-    // Update user information
     const [updatedRows] = await User.update({ name, email }, { where: { id } });
 
     if (updatedRows === 0) {
@@ -255,7 +251,6 @@ const updateUserInfo = async (req, res) => {
       });
     }
 
-    // Get updated user data
     const updatedUser = await User.findByPk(id, {
       attributes: { exclude: ["password"] },
     });
