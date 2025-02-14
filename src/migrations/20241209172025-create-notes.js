@@ -15,6 +15,10 @@ module.exports = {
       content: {
         type: Sequelize.STRING,
       },
+      iv: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       isPinned: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,

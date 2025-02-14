@@ -1,4 +1,5 @@
 const db = require("../../models");
+const { decrypt, encrypt } = require("../../utils/encryption");
 const Note = db.notes;
 
 const getNotes = async (req, res) => {
@@ -13,10 +14,15 @@ const getNotes = async (req, res) => {
       ],
     });
 
+    const decryptedNotes = notes.map((note) => {
+      const decryptedContent = decrypt(note.iv, note.content);
+      return { ...note.toJSON(), content: decryptedContent };
+    });
+
     return res.json({
       error: false,
       userId,
-      notes,
+      notes: decryptedNotes,
       message: "Notes retrieved successfully",
     });
   } catch (error) {
@@ -41,9 +47,13 @@ const addNote = async (req, res) => {
   }
 
   try {
-    const note = await Note.create({ title, content, userId });
-
-    await note.save();
+    const { iv, encryptedData } = encrypt(content);
+    const note = await Note.create({
+      title,
+      content: encryptedData,
+      iv,
+      userId,
+    });
 
     return res.json({
       error: false,
@@ -82,7 +92,9 @@ const editNote = async (req, res) => {
       note.title = title;
     }
     if (content) {
-      note.content = content;
+      const { iv, encryptedData } = encrypt(content);
+      note.content = encryptedData;
+      note.iv = iv;
     }
     if (isPinned) {
       note.isPinned = isPinned;

@@ -5,29 +5,36 @@ const passwordUtil = require("../utils/password.util");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert("users", [
+    const users = [
       {
         name: "Muhamad Rifqi",
         email: "a@b.c",
-        password: await passwordUtil.encrypt("789123"),
+        password: "789123",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         name: "John Doe",
         email: "johndoe@example.com",
-        password: await passwordUtil.encrypt("789123"),
+        password: "789123",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         name: "Jane Doe",
         email: "janedoe@example.com",
-        password: await passwordUtil.encrypt("789123"),
+        password: "789123",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
-    ]);
+    ];
+
+    for (const user of users) {
+      const encryptedPassword = await passwordUtil.encrypt(user.password);
+      user.password = encryptedPassword;
+    }
+
+    await queryInterface.bulkInsert("users", users);
   },
 
   async down(queryInterface, Sequelize) {
